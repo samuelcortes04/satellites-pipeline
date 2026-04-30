@@ -2,8 +2,8 @@ name: Update Satelital
 
 on:
   schedule:
-    - cron: '0 0 1 1 *'  # Corre el 1 de enero cada año
-  workflow_dispatch:       # También permite correrlo manualmente
+    - cron: '0 0 1 1 *'
+  workflow_dispatch:       
 
 jobs:
   update:
@@ -27,3 +27,11 @@ jobs:
           GEE_CREDENTIALS: ${{ secrets.GEE_CREDENTIALS }}
         run: |
           python update_satelital.py
+
+      - name: Guardar CSV al repo
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add data/
+          git commit -m "Update satelital $(date +'%Y')" || echo "No changes"
+          git push
