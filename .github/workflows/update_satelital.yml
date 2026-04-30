@@ -1,0 +1,29 @@
+name: Update Satelital
+
+on:
+  schedule:
+    - cron: '0 0 1 1 *'  # Corre el 1 de enero cada año
+  workflow_dispatch:       # También permite correrlo manualmente
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias
+        run: |
+          pip install earthengine-api geemap
+
+      - name: Correr script
+        env:
+          GEE_CREDENTIALS: ${{ secrets.GEE_CREDENTIALS }}
+        run: |
+          python update_satelital.py
